@@ -1,4 +1,4 @@
- #!/bin/bash
+#!/bin/bash
 
 # check files under /boot for changes
 # Author: ju (ju at heisec dot de)
