@@ -7,9 +7,11 @@ Lizenz: GPLv2 oder später
 
 Content:
 --------
-                 SHA1-Hash
+```
+File            SHA1-Hash
 chkboot.sh      4a8a81306074f94cd12e8fe75f019ba3a70cc422  
 chkboot_user.sh 82c826cd2c5310cd6b90ee278ee3d0f69d7dcd24  
+```
 
 
 Description:
