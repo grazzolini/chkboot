@@ -1,0 +1,11 @@
+[Unit]
+Description=Check /boot partition for changed files
+Requires=basic.target
+After=basic.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/chkboot.sh
+
+[Install]
+WantedBy=multi-user.target
