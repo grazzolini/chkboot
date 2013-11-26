@@ -1,0 +1,38 @@
+Software zum Artikel Boot-Sicherung, c't 3/12, S. 146
+
+Autor: Juergen Schmidt, ju at heisec.de
+Lizenz: GPLv2 oder später
+
+Inhalt:
+======
+                 SHA1-Hash
+chkboot.sh      4a8a81306074f94cd12e8fe75f019ba3a70cc422  
+chkboot_user.sh 82c826cd2c5310cd6b90ee278ee3d0f69d7dcd24  
+
+
+Funktion:
+=========
+chkboot.sh:  Checkt für alle Dateien unter /boot
+den SHA1-Hash, die Inode und die auf der Platte
+belegten Blocks auf Veränderungen. Checkt auch den MBR.
+Die Dateien mit den Infos landen unter /var/chkboot,
+Ereignisse im System-Log. Erfordert Root-Rechte
+
+chkboot_user.sh: Checkt, ob die Datei
+/var/chkboot/bootfiles-diff vorhanden ist und gibt die
+als Meldung aus. Benötigt zenity
+
+
+Installation:
+=============
+Beide Skript etwa nach /usr/local/bin kopieren; evtl
+mit "chmod a+x /usr/local/bin/chkboot*" als ausführbar
+markieren.
+
+chkboot.sh sollte beim System-Start ausgeführt
+werden. Also etwa in /etc/rc.local eintragen:
+
+/usr/local/bin/chkboot.sh &
+
+chkboot_user.sh sollte beim Login ausgeführt
+werden. Dazu über das Menü als "Startprogramm" eintragen.
