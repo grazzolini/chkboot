@@ -43,4 +43,4 @@ heisec.de. The original source code can be found either at the first commit of
 this repository, or at the [original URL] [2].
 
 [1]: http://www.heise.de/ct/inhalt/2012/03/146/
-[2]: ftp://ftp.heise.de/pub/ct/listings/1203-146.zip
+[2]: http://ftp.heise.de/pub/ct/listings/1203-146.zip
