@@ -14,6 +14,10 @@
 # Todo: 
 ## backup files
 
+if [ "$UID" -ne 0 ]
+then echo "chkboot.sh must be run as root"
+	exit
+fi
 # Source chkboot.conf which tells us where /boot is
 . /etc/chkboot.conf
 
@@ -38,13 +42,13 @@ files=`find . -xdev -type f`
 # remove files to skip
 files=`echo $files | sed "s/.\/grub\/grubenv//"`
 for f in $files; do 
-    hash=`sha1sum -b $f | awk '{print $1}'`
-    inode=`stat --printf="%i\n" $f`
-    blcks=`
-         debugfs -R "stat $f"  $bdev 2>/dev/null |\
-         grep -A 1 -e 'BLOCKS:' -e 'EXTENTS' | tail -1 
-      `
-    echo "$f $inode $hash $blcks"
+	hash=`sha1sum -b $f | awk '{print $1}'`
+	inode=`stat --printf="%i\n" $f`
+	blcks=`
+	debugfs -R "stat $f"  $bdev 2>/dev/null |\
+	grep -A 1 -e 'BLOCKS:' -e 'EXTENTS' | tail -1 
+	`
+	echo "$f $inode $hash $blcks"
 done > $new
 
 # no output?
@@ -52,13 +56,13 @@ done > $new
 
 # initialise 
 if [ ! -s "$lastmbr" ] ; then
-    logger -t chk_boot  "Created new $mbr" 
-    ln -s -f $mbr $lastmbr
+	logger -t chk_boot  "Created new $mbr" 
+	ln -s -f $mbr $lastmbr
 fi
 if [ ! -s "$lastfiles" ] ; then
-    logger -t chk_boot  "Created new $new" 
-    ln -s -f $new $lastfiles
-    exit
+	logger -t chk_boot  "Created new $new" 
+	ln -s -f $new $lastfiles
+	exit
 fi
 
 # check for changes
@@ -68,20 +72,20 @@ changed=0
 
 # do alerting
 if [ $changed != 0 ] ; then
-    echo "Changes found `date`
-      This can happen after for example kernel updates. 
-      To accept the changes, delete $diff
+	echo "Changes found `date`
+	This can happen after for example kernel updates. 
+	To accept the changes, delete $diff
 
-    " >> $diff
-    cat $diffn >> $diff
-    logger -t chk_boot  "ALERT: Found changes $diffn" 
-    # our duty is done, acept new standard
-    ln -s -f $new $lastfiles
-    ln -s -f $mbr $lastmbr
-    exit 1
+	" >> $diff
+	cat $diffn >> $diff
+	logger -t chk_boot  "ALERT: Found changes $diffn" 
+	# our duty is done, acept new standard
+	ln -s -f $new $lastfiles
+	ln -s -f $mbr $lastmbr
+	exit 1
 else
-    logger -t chk_boot  "no changes found" 
-    rm -f $mbr $diffn $new
+	logger -t chk_boot  "no changes found" 
+	rm -f $mbr $diffn $new
 fi 
 
 cd $savdir
