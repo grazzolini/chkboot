@@ -14,12 +14,8 @@
 # Todo: 
 ## backup files
 
-
-# the boot device - check "mount" for /boot
-bdev=/dev/sda1
-bdisk=/dev/sda
-bdir=/boot
-chkdir="/var/chkboot"
+# Source chkboot.conf which tells us where /boot is
+. /etc/chkboot.conf
 
 now=`date +"%y%m%d-%H%M"`
 
