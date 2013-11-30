@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+# chkboot: copy to $PATH and change its permissions to executable, then set to run on startup
+#
+# author: ju (ju at heisec dot de)
+# contributors: inhies, prurigro
+#
+# license: GPLv2
+#
+# a reminder that this will NOT protect against:
+#   -a trojan hiding in your BIOS
+#   -rootkits that mimmick the old files
+
+if [ "$UID" -ne 0 ]; then
+    echo "$0 must be run as root"
+    exit 1
+fi
+
+source /etc/default/chkboot.conf
+
+currtime=`date +"%y%m%d-%H%M"`
+bootfiles="${CHKBOOT_DATA}/bootfiles-$currtime"
+bootfiles_last="${CHKBOOT_DATA}/bootfiles-last"
+diskhead="${CHKBOOT_DATA}/diskhead-$currtime"
+diskhead_last="${CHKBOOT_DATA}/diskhead-last"
+CHANGES_ALERT="${CHKBOOT_DATA}/${CHANGES_ALERT}"
+CHANGES_LOG="${CHKBOOT_DATA}/${CHANGES_LOG}"
+
+install -d "$CHKBOOT_DATA"
+
+# delete the previous 
+if [[ -s "${CHANGES_ALERT}" ]]; then
+    rm "${CHANGES_ALERT}"
+fi
+
+# making a copy of the head of the disk
+dd if="$BOOTDISK" of="$diskhead" bs=512 count=1 > /dev/null 2>&1
+
+pushd "$BOOTDIR" > /dev/null 2>&1
+    files=`find . -xdev -type f` # get file infos
+    files=`echo $files | sed "s/.\/grub\/grubenv//"` # remove files that should be skipped
+
+    # generate hashes of each file
+    for fname in $files; do
+        hash=`sha256sum -b $fname | awk '{print $1}'`
+        inode=`stat --printf="%i\n" $fname`
+        blcks=`debugfs -R "stat $fname"  $BOOTPART 2>/dev/null | grep -A 1 -e 'BLOCKS:' -e 'EXTENTS' | tail -1`
+        echo "$fname $inode $hash $blcks"
+    done > $bootfiles
+
+    [ -s "$bootfiles" ] || ( exit 0 )
+    if [ ! -s "$diskhead_last" ]; then ln -s -f $diskhead $diskhead_last; fi
+    if [ ! -s "$bootfiles_last" ]; then ln -s -f $bootfiles $bootfiles_last; exit 0; fi
+
+    changed=0 # check for changes
+    ( diff $bootfiles_last $bootfiles >> "${CHANGES_ALERT}-now" ) || changed=1
+    ( diff $diskhead_last $diskhead >> "${CHANGES_ALERT}-now" ) || changed=1
+
+    # changes detected, create the changes alert file
+    if [ $changed != 0 ] ; then
+        # create the changes alert file with a heading and the date and the list of changed files
+        echo -e "List of changed files on `date`:\n" > "${CHANGES_ALERT}"
+        cat "${CHANGES_ALERT}-now" >> "${CHANGES_ALERT}"
+
+        # copy the latest changes file to the end of the log
+        cat "${CHANGES_ALERT}" >> "${CHANGES_LOG}"
+        echo >> "${CHANGES_LOG}"
+
+        # set the latest hashes to the old ones for next time then exit
+        ln -s -f $bootfiles $bootfiles_last
+        ln -s -f $diskhead $diskhead_last
+        exit 1
+    else
+        rm -f $diskhead "${CHANGES_ALERT}-now" $bootfiles
+    fi
+popd > /dev/null 2>&1
