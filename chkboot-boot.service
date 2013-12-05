@@ -1,0 +1,12 @@
+[Unit]
+Description=Check for changes made to the boot partition since shutting down before login via /etc/issue
+
+Requires=basic.target
+After=basic.target
+
+[Service]
+Type=oneshot
+ExecStart=-/usr/bin/chkboot ; -/usr/bin/chkboot-bootcheck
+
+[Install]
+WantedBy=multi-user.target
