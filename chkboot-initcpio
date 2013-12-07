@@ -1,13 +1,22 @@
 #!/usr/bin/env bash
 
+# chkboot-initcpio: on Arch Linux (and possibly other systems with mkinitcpio), copy this
+#                   to '/usr/lib/initcpio/install/chkboot', then add 'chkboot' to the end
+#                   of the 'HOOKS' array, and rerun mkinitcpio to generate with this  included
+#
+# author: ju (ju at heisec dot de)
+# contributors: inhies, prurigro
+#
+# license: GPLv2
+
 build() {
-    source /etc/default/chkboot.conf
+    echo "Updating chkboot hashes of your boot files..."
 
-    echo "chkboot is updating the hashes of your boot files..."
-
-    source /etc/profile.d/chkboot-diffcheck.sh
+    #TEST TO SEE IF BOOT FILES WERE MODIFIED WITHOUT THE USER'S ACKNOWLEDGEMENT (BY RUNNING 'chkboot') AND ALERT THEM IF IT HAS BEEN
+    chkboot-check
     if [ "$?" = 1 ]; then echo -e "\n### WARNING: Previously modified files were not acknowledged ###"; echo "### Check the issues log at ${CHANGES_LOG} for details ###"; fi
 
+    #RUN CHKBOOT TO UPDATE THE HASHES
     chkboot && sync
 }
 

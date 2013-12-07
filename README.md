@@ -15,39 +15,36 @@ and the MBR of the boot partition if it exists, then compares the values of
 these hashes against previously generated hashes if they exist, and any files
 that don't match get added to a list. A timestamped log of all files that have
 had changes made to them is kept, but the short term list meant to alert the
-user is erased the next time `chkbot` is run.
+user is erased the next time `chkboot` is run.
 
-`chkboot-diffcheck.sh`: This file is installed to /etc/profile.d/ so it will
-run each time you login to a shell. When the file showing a list of changes made
-to the boot partition exists, each new shell the user logs into will alert them
-and list the changed files. When the user has reviewed the changed files, they
-can run `chkbot` to remove the file showing changes assuming no additional ones
-are detected, and the notice will no longer appear.
+`chkboot-check`: This file can be run by anyone who can view /var/lib/chkboot,
+and will display a warning a the list of changed files if any were detected last
+time chkboot was run.
 
-`chkboot-pacman-update`: This script uses a combination of the two scripts above
-to savely update the system by first checking for previously unresolved changes,
-then checks to make sure there aren't any new changes before then allowing the
-system to update. If there then any changes following the updates, `chkboot`
-runs one more time to autoresolve the issue, as changes caused by package
-management are expected and are not an issue.
-*Note that without modification, this script only works with Archlinux
+`chkboot.conf`: Contans settings for your configuration, including which alert
+types will be used. Alert types are currently on shell login via '/etc/profile.d'
+and in the vterm header by modifying '/etc/issue'
 
-Installation:
+`INITCPIO SUPPORT`: If your system uses initcpio, add 'chkboot' to the end
+of your modules array to have chkboot run automatically when you upgrade linux.
+
+`SYSTEMD SUPPORT`: If your system uses systemd, you should enable the chkboot
+service to have your boot partitioned checked every time your system starts.
+
+Installation: Everything should be installed as shown below (assuming your system supports everything)
 -------------
-Copy `chkboot` and `chkboot-pacman-update` to a location in $PATH and set
-their permissions to 755:
-    ]$ install -d -m755 chkboot /usr/bin/chkboot
-    ]$ install -d -m755 chkboot-pacman-update /usr/bin/chkboot-pacman-update
+install -D -m644 chkboot/chkboot.conf /etc/default/chkboot.conf
+install -D -m755 chkboot/chkboot /usr/bin/chkboot
+install -D -m755 chkboot/chkboot-check /etc/profile.d/chkboot-check
+install -D -m755 chkboot/chkboot-profilealert.sh /usr/bin/chkboot-profilealert.sh
 
-Copy `chkboot-diffcheck.sh` to /etc/profile.d/ and set its permissions to 755:
-    ]$ install -d -m755 chkboot-diffcheck.sh /etc/profile.d/chkboot-diffcheck.sh
+#REQUIRES INITCPIO: Once installed, add 'chkboot' to the end of the 'HOOKS' array in '/etc/mkinitcpio.conf'
+install -D -m644 chkboot/chkboot-initcpio /usr/lib/initcpio/install/chkboot
 
-Copy `chkboot.conf` to /etc/default/ and set its permissions to 644:
-    ]$ install -d -m644 chkboot.conf /etc/default/chkboot.conf
-
-Copy `chkboot.service` to /usr/lib/systemd/system/ and set its permissions to 644:
-    ]$ install -d -m644 chkboot.service /usr/lib/systemd/system/chkboot.service
-    *Note that this should only be used in combination with systemd
+#REQUIRES SYSTEMD: Once installed, run 'systemctl --system daemon-reload' and then 'systemctl enable chkboot'
+#Optionall, the 'chkboot-bootcheck' can be installed elsewhere and added to the startup sequence with another system
+install -D -m644 chkboot/chkboot.service /usr/lib/systemd/system/chkboot.service
+install -D -m755 chkboot/chkboot-bootcheck /usr/lib/systemd/scripts/chkboot-bootcheck
 
 Credits
 -------
