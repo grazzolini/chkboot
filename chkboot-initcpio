@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+build() {
+    source /etc/default/chkboot.conf
+
+    echo "chkboot is updating the hashes of your boot files..."
+
+    source /etc/profile.d/chkboot-diffcheck.sh
+    if [ "$?" = 1 ]; then echo -e "\n### WARNING: Previously modified files were not acknowledged ###"; echo "### Check the issues log at ${CHANGES_LOG} for details ###"; fi
+
+    chkboot && sync
+}
+
+help() {
+    cat <<HELPEOF
+    Update the the collection of hashes for files on the boot partition
+HELPEOF
+}
