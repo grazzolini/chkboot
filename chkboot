@@ -30,6 +30,12 @@ install -d "$CHKBOOT_DATA"
 
 # delete the previous 
 if [[ -s "${CHANGES_ALERT}" ]]; then
+    # restore /etc/issue if it's been modified
+    if [ ! $(grep -c "CHKBOOT ALERT" /etc/issue) = 0 ]; then
+        sed -i ':a;N;$!ba;s/\n/CHKBOOT_TEMPNEWLINE/g;s:CHKBOOT_TEMPNEWLINE\x1B\[[0-9;]*[mK].*::g;s/CHKBOOT_TEMPNEWLINE/\n/g' /etc/issue
+    fi
+
+    # reset the changes being tracked by removing the file containing them (the log still exists)
     rm "${CHANGES_ALERT}"
 fi
 

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# chkboot-bootcheck: on systemd systems, copy this to /usr/lib/systemd/scripts/ and start the chkboot-boot.service
+#                    on other systems, copy this somewhere it can be acceed during boot and add it to the end of the boot process
+#
+# author: ju (ju at heisec dot de)
+# contributors: inhies, prurigro
+#
+# license: GPLv2
+
+source /etc/default/chkboot.conf
+
+chkboot
+
+# only modify /etc/issue if that style of alert has been selected
+if [ ! $(echo "${CHKBOOT_STYLES}" | grep -c "issue") = 0 ]; then
+    # modify /etc/issue if any changes to boot files have been found
+    CHKBOOT_CHECK=$(chkboot-check)
+    if [ "$?" = 1 ]; then echo "${CHKBOOT_CHECK}" >> /etc/issue; fi
+fi

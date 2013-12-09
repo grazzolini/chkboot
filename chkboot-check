@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# chkboot-check: copy to /usr/bin/chkboot-check and change its permissions to executable and run to test for changes
+#
+# author: ju (ju at heisec dot de)
+# contributors: inhies, prurigro
+#
+# license: GPLv2
+
+source /etc/default/chkboot.conf
+
+if [[ -s "${CHKBOOT_DATA}/${CHANGES_ALERT}" ]]; then
+    echo -e -n "\e[0;${HIGHLIGHT_COLOUR};47m"
+    echo -e "CHKBOOT ALERT!\n"
+    echo "Changes have been detected in your boot files!"
+    echo "The following list of files contained in have changed since the last time this script was run (filename inode sha256 BLOCKS):"
+    cat "${CHKBOOT_DATA}/${CHANGES_ALERT}"
+    echo -e -n "\nThis notification will continue to appear until you either run \"chkboot\" again as root or restart your computer"
+    echo -e "\e[0m\n"
+
+    exit 1
+fi
