@@ -1,5 +1,6 @@
 Introduction:
 -------------
+
 chkboot is a set of scripts that are meant to be run on a system with an
 encrypted disk drive. Due to the nature of disk encryption, in order to get
 the operating system to boot, there needs to be a portion of it which remains
@@ -8,8 +9,10 @@ reboots. Since the scripts and the data they generate are stored on the
 encrypted part of the disk, any attempts to modify the boot partition between
 reboots will be detected.
 
-Description:
+
+Description
 ------------
+
 `chkboot`: When run as root, this generates sha256sum hashes of each boot file
 and the MBR of the boot partition if it exists, then compares the values of
 these hashes against previously generated hashes if they exist, and any files
@@ -21,33 +24,56 @@ user is erased the next time `chkboot` is run.
 and will display a warning a the list of changed files if any were detected last
 time chkboot was run.
 
-`chkboot.conf`: Contans settings for your configuration, including which alert
-types will be used. Alert types are currently on shell login via '/etc/profile.d'
-and in the vterm header by modifying '/etc/issue'
+`chkboot.conf`: Contans settings for your configuration, including which
+alert types will be used. Alert types are currently on shell login via
+'/etc/profile.d' and in the vterm header by modifying '/etc/issue'
 
-`INITCPIO SUPPORT`: If your system uses initcpio, add 'chkboot' to the end
-of your modules array to have chkboot run automatically when you upgrade linux.
+`INITCPIO SUPPORT`: If your system uses initcpio, add 'chkboot' to the end of
+your modules array to have chkboot run automatically when you upgrade linux.
 
 `SYSTEMD SUPPORT`: If your system uses systemd, you should enable the chkboot
 service to have your boot partitioned checked every time your system starts.
 
-Installation: Everything should be installed as shown below (assuming your system supports everything)
--------------
+
+Installation 
+------------
+
+### Everything should be installed as shown below
+
+```
 install -D -m644 chkboot/chkboot.conf /etc/default/chkboot.conf
 install -D -m755 chkboot/chkboot /usr/bin/chkboot
 install -D -m755 chkboot/chkboot-check /etc/profile.d/chkboot-check
 install -D -m755 chkboot/chkboot-profilealert.sh /usr/bin/chkboot-profilealert.sh
+```
 
-#REQUIRES INITCPIO: Once installed, add 'chkboot' to the end of the 'HOOKS' array in '/etc/mkinitcpio.conf'
+
+### REQUIRES INITCPIO: 
+
+Add `chkboot` to the end of the 'HOOKS' array in `/etc/mkinitcpio.conf`
+
+```
 install -D -m644 chkboot/chkboot-initcpio /usr/lib/initcpio/install/chkboot
+```
 
-#REQUIRES SYSTEMD: Once installed, run 'systemctl --system daemon-reload' and then 'systemctl enable chkboot'
-#Optionall, the 'chkboot-bootcheck' can be installed elsewhere and added to the startup sequence with another system
+### REQUIRES SYSTEMD
+
+Run `systemctl --system daemon-reload` and then `systemctl enable chkboot`
+
+### OPTIONAL:
+
+`chkboot-bootcheck` can be installed elsewhere and added to the startup sequence 
+with another system:
+
+```
 install -D -m644 chkboot/chkboot.service /usr/lib/systemd/system/chkboot.service
 install -D -m755 chkboot/chkboot-bootcheck /usr/lib/systemd/scripts/chkboot-bootcheck
+```
+
 
 Credits
 -------
+
 Author: Ju (ju at heisec dot de)
 
 chkboot originally appeared in an article titled "Boot-Sicherung" in [c't
