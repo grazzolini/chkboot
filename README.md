@@ -34,17 +34,37 @@ your modules array to have chkboot run automatically when you upgrade linux.
 `SYSTEMD SUPPORT`: If your system uses systemd, you should enable the chkboot
 service to have your boot partitioned checked every time your system starts.
 
-
-Installation 
+Installation
 ------------
+
+### The basic components can be installed as shown below
+
+```
+make install
+```
+
+### To install INITCPIO components:
+
+```
+make install-initcpio
+```
+
+### To install SYSTEMD components:
+
+```
+make install-systemd
+```
+
+Manual Installation 
+-------------------
 
 ### Everything should be installed as shown below
 
 ```
 install -D -m644 chkboot/chkboot.conf /etc/default/chkboot.conf
 install -D -m755 chkboot/chkboot /usr/bin/chkboot
-install -D -m755 chkboot/chkboot-check /etc/profile.d/chkboot-check
-install -D -m755 chkboot/chkboot-profilealert.sh /usr/bin/chkboot-profilealert.sh
+install -D -m755 chkboot/chkboot-check /usr/bin/chkboot-check
+install -D -m755 chkboot/chkboot-profilealert.sh /etc/profile.d/chkboot-profilealert.sh
 ```
 
 
