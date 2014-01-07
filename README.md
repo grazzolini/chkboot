@@ -43,13 +43,13 @@ Installation
 make install
 ```
 
-### To install INITCPIO components:
+### To install initcpio components:
 
 ```
 make install-initcpio
 ```
 
-### To install SYSTEMD components:
+### To install systemd components:
 
 ```
 make install-systemd
@@ -67,6 +67,12 @@ install -D -m755 chkboot/chkboot-check /usr/bin/chkboot-check
 install -D -m755 chkboot/chkboot-profilealert.sh /etc/profile.d/chkboot-profilealert.sh
 ```
 
+To make `chkboot` run on startup on BSD-style init-based systems (e.g. Debian,
+Ubuntu), add the following line to `/etc/rc.local`:
+
+```
+/usr/bin/chkboot &
+```
 
 ### REQUIRES INITCPIO: 
 
