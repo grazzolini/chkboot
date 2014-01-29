@@ -16,8 +16,9 @@ build() {
     chkboot-check
     if [ "$?" = 1 ]; then echo -e "\n### WARNING: Previously modified files were not acknowledged ###"; echo "### Check the issues log at ${CHANGES_LOG} for details ###"; fi
 
-    #RUN CHKBOOT TO UPDATE THE HASHES
-    chkboot && sync
+    #RUN CHKBOOT TO UPDATE THE HASHES WITHOUT CREATING THE ALERT FILE
+    chkboot -u
+    sync
 }
 
 help() {

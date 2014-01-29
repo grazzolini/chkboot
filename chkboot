@@ -11,20 +11,44 @@
 #   -a trojan hiding in your BIOS
 #   -rootkits that mimmick the old files
 
+CHKBOOT_CMD=$(echo "$0" | sed 's/.*\///g')
+
+function help {
+    echo "Syntax:"
+    echo -e "\t'${CHKBOOT_CMD}': Update checksums for boot partition files and create/update the alert file with any differences"
+    echo -e "\t'${CHKBOOT_CMD} -u' or '${CHKBOOT_CMD} --update': When making valid changes to boot, update checksums and remove the alert file if it exists"
+    echo -e "\t'${CHKBOOT_CMD} -h' or '${CHKBOOT_CMD} --help': Display this help text"
+}
+
 if [ "$UID" -ne 0 ]; then
-    echo "$0 must be run as root"
+    echo "${CHKBOOT_CMD} must be run as root"
     exit 1
 fi
 
 source /etc/default/chkboot.conf
 
-currtime=`date +"%y%m%d-%H%M"`
-bootfiles="${CHKBOOT_DATA}/bootfiles-$currtime"
-bootfiles_last="${CHKBOOT_DATA}/bootfiles-last"
-diskhead="${CHKBOOT_DATA}/diskhead-$currtime"
-diskhead_last="${CHKBOOT_DATA}/diskhead-last"
+CURRTIME=`date +"%y%m%d-%H%M"`
+BOOTFILES="${CHKBOOT_DATA}/BOOTFILES-$CURRTIME"
+BOOTFILES_LAST="${CHKBOOT_DATA}/BOOTFILES-last"
+DISKHEAD="${CHKBOOT_DATA}/DISKHEAD-$CURRTIME"
+DISKHEAD_LAST="${CHKBOOT_DATA}/DISKHEAD-last"
 CHANGES_ALERT="${CHKBOOT_DATA}/${CHANGES_ALERT}"
 CHANGES_LOG="${CHKBOOT_DATA}/${CHANGES_LOG}"
+
+if [ ! -z "$1" ]; then
+    if [ "$1" = "-u" -o "$1" = "--update" ]; then
+        CHANGED="-1"
+    elif [ "$1" = "-h" -o "$1" = "--help" ]; then
+        help
+        exit 0
+    else
+        echo -e "Invalid argument: ${1}"
+        help
+        exit 1
+    fi    
+else
+    CHANGED="0"
+fi
 
 install -d "$CHKBOOT_DATA"
 
@@ -40,7 +64,7 @@ if [[ -s "${CHANGES_ALERT}" ]]; then
 fi
 
 # making a copy of the head of the disk
-dd if="$BOOTDISK" of="$diskhead" bs=512 count=1 > /dev/null 2>&1
+dd if="$BOOTDISK" of="$DISKHEAD" bs=512 count=1 > /dev/null 2>&1
 
 pushd "$BOOTDIR" > /dev/null 2>&1
     files=`find . -xdev -type f` # get file infos
@@ -52,31 +76,32 @@ pushd "$BOOTDIR" > /dev/null 2>&1
         inode=`stat --printf="%i\n" $fname`
         blcks=`debugfs -R "stat $fname"  $BOOTPART 2>/dev/null | grep -A 1 -e 'BLOCKS:' -e 'EXTENTS' | tail -1`
         echo "$fname $inode $hash $blcks"
-    done > $bootfiles
+    done > $BOOTFILES
 
-    [ -s "$bootfiles" ] || ( exit 0 )
-    if [ ! -s "$diskhead_last" ]; then ln -s -f $diskhead $diskhead_last; fi
-    if [ ! -s "$bootfiles_last" ]; then ln -s -f $bootfiles $bootfiles_last; exit 0; fi
+    [ -s "$BOOTFILES" ] || ( exit 0 )
+    if [ ! -s "$DISKHEAD_LAST" ]; then ln -s -f $DISKHEAD $DISKHEAD_LAST; fi
+    if [ ! -s "$BOOTFILES_LAST" ]; then ln -s -f $BOOTFILES $BOOTFILES_LAST; exit 0; fi
 
-    changed=0 # check for changes
-    ( diff $bootfiles_last $bootfiles >> "${CHANGES_ALERT}-now" ) || changed=1
-    ( diff $diskhead_last $diskhead >> "${CHANGES_ALERT}-now" ) || changed=1
+    if [ ! "$CHANGED" = "-1" ]; then
+        ( diff $BOOTFILES_LAST $BOOTFILES >> "${CHANGES_ALERT}-now" ) || CHANGED="1"
+        ( diff $DISKHEAD_LAST $DISKHEAD >> "${CHANGES_ALERT}-now" ) || CHANGED="1"
+    fi
 
     # changes detected, create the changes alert file
-    if [ $changed != 0 ] ; then
+    if [ ! $CHANGED = "1" ] ; then
+        rm -f $DISKHEAD "${CHANGES_ALERT}-now" $BOOTFILES
+    else
         # create the changes alert file with a heading and the date and the list of changed files
         echo -e "List of changed files on `date`:\n" > "${CHANGES_ALERT}"
-        cat "${CHANGES_ALERT}-now" >> "${CHANGES_ALERT}"
+        cat "${CHANGES_ALERT}-now" >> "$CHANGES_ALERT"
 
         # copy the latest changes file to the end of the log
-        cat "${CHANGES_ALERT}" >> "${CHANGES_LOG}"
-        echo >> "${CHANGES_LOG}"
+        cat "$CHANGES_ALERT" >> "$CHANGES_LOG"
+        echo >> "$CHANGES_LOG"
 
         # set the latest hashes to the old ones for next time then exit
-        ln -s -f $bootfiles $bootfiles_last
-        ln -s -f $diskhead $diskhead_last
+        ln -s -f $BOOTFILES $BOOTFILES_LAST
+        ln -s -f $DISKHEAD $DISKHEAD_LAST
         exit 1
-    else
-        rm -f $diskhead "${CHANGES_ALERT}-now" $bootfiles
     fi
 popd > /dev/null 2>&1
