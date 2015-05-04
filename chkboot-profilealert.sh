@@ -7,6 +7,8 @@
 #
 # license: GPLv2
 
+source /etc/default/chkboot.conf
+
 # only try to display chkboot changes if the 'proofile' alert style has been selected
 if [ ! $(echo "${CHKBOOT_STYLES}" | grep -c "profile") = 0 ]; then
     # run whatever issues exist then return the response
