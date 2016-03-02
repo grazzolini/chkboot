@@ -65,6 +65,7 @@ install -D -m644 chkboot/chkboot.conf /etc/default/chkboot.conf
 install -D -m755 chkboot/chkboot /usr/bin/chkboot
 install -D -m755 chkboot/chkboot-check /usr/bin/chkboot-check
 install -D -m755 chkboot/chkboot-profilealert.sh /etc/profile.d/chkboot-profilealert.sh
+install -D -m755 chkboot-zenityalert /usr/bin/chkboot-zenityalert
 ```
 
 To make `chkboot` run on startup on BSD-style init-based systems (e.g. Debian,
@@ -96,6 +97,10 @@ install -D -m644 chkboot/chkboot.service /usr/lib/systemd/system/chkboot.service
 install -D -m755 chkboot/chkboot-bootcheck /usr/lib/systemd/scripts/chkboot-bootcheck
 ```
 
+``chkboot-zenityalert`` notifies the desktop user about the change and can be
+included as startup script in the desktop environment. Its a simple adaption
+of Ju's initial idea.
+
 
 Credits
 -------
@@ -113,3 +118,4 @@ this repository, or at the [original URL] [2].
 Additional authors:
 Inhies (https://github.com/inhies/)
 Prurigro (https://github.com/prurigro/)
+sercxanto (https://github.com/sercxanto/)
