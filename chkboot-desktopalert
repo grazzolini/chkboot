@@ -14,7 +14,7 @@ ZENITY=/usr/bin/zenity
 NOTIFICATION="This notification will continue to appear until you either run chkboot again as root or restart your computer"
 
 if [ -s $chgfile ]; then
-    if [ ! -x $ZENITY ]; then
+    if [ -x $ZENITY ]; then
         cat $chgfile | $ZENITY --title "ALERT: Boot changes" --text-info --width 550 --height 300
         $ZENITY --title "chkboot" --info --text="$NOTIFICATION"
     elif [ -x $XMESSAGE ]; then
