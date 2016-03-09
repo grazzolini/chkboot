@@ -6,3 +6,4 @@ Original author
 Additional authors
     Inhies (https://github.com/inhies/)
     Prurigro (https://github.com/prurigro/)
+    sercxanto (https://github.com/sercxanto/)

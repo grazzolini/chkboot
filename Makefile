@@ -8,6 +8,7 @@ install:
 	install -D -m755 chkboot $(BIN)/chkboot
 	install -D -m755 chkboot-check $(BIN)/chkboot-check
 	install -D -m755 chkboot-profilealert.sh $(PROFILED)/chkboot-profilealert.sh
+	install -D -m755 chkboot-zenityalert $(BIN)/chkboot-zenityalert
 
 install-initcpio: install
 	install -D -m644 chkboot-initcpio $(LIB)/initcpio/install/chkboot
