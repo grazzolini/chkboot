@@ -4,7 +4,7 @@ Section: shells
 Priority: optional
 Standards-Version: 3.9.8
 Build-Depends: debhelper (>= 9)
-Vcs-Git: https://github.com/grazzolini/chkboot.git
+Vcs-Git: https://github.com/philippmeisberger/chkboot.git
 
 Package: chkboot
 Depends: ${misc:Depends}, lsb-base
@@ -18,16 +18,3 @@ Description: Runs integrity checks on unencrypted /boot files during boot
  have not changed between reboots.  Since the scripts and the data they
  generate are stored on the encrypted part of the disk, any attempts to
  modify the boot partition between reboots will be detected.
- .
- Author: Ju (ju at heisec dot de)
- chkboot originally appeared in an article titled "Boot-Sicherung" in
- [c't magazin's March 2012 issue] [1]. The original author is Juergen
- Schmidt, ju atheisec.de. The original source code can be found either
- at the first commit of this repository, or at the [original URL] [2].
- .
- [1]: http://www.heise.de/ct/inhalt/2012/03/146/
- [2]: http://ftp.heise.de/pub/ct/listings/1203-146.zip
- .
- Additional authors:
- Inhies (https://github.com/inhies/)
- Prurigro (https://github.com/prurigro/)
