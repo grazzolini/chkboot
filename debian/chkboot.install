@@ -1,0 +1,6 @@
+chkboot usr/bin/
+chkboot-check usr/bin/
+chkboot-desktopalert usr/bin/
+chkboot.conf etc/default/
+chkboot-profilealert.sh etc/profile.d/
+chkboot-bootcheck usr/lib/systemd/scripts/

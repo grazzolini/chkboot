@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. /etc/default/chkboot.conf
+
+set -e
+
+if [ "$1" = "remove" ] ; then
+    echo "Removing ${CHKBOOT_DATA} ..."
+    rm -R "${CHKBOOT_DATA}"
+fi
+
+#DEBHELPER#
+exit 0

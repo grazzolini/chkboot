@@ -1,0 +1,17 @@
+chkboot (1.2) stable; urgency=low
+
+  * Added desktop alert script
+
+ -- Philipp Meisberger <team@pm-codeworks.de>  Thu, 05 Oct 2017 12:31:25 +0200
+
+chkboot (1.1) stable; urgency=medium
+
+  * Corrected the zenity binary check
+
+ -- Philipp Meisberger <team@pm-codeworks.de>  Thu, 04 Oct 2017 11:36:25 +0200
+
+chkboot (1.0) stable; urgency=medium
+
+  * Initial release
+
+ -- Philipp Meisberger <team@pm-codeworks.de>  Thu, 04 Oct 2017 11:37:25 +0200

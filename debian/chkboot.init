@@ -1,0 +1,41 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          chkboot
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Checks files in /boot during boot
+# Description:
+### END INIT INFO
+
+NAME=chkboot
+
+. /lib/lsb/init-functions
+
+case "${1}" in
+
+    start)
+        log_daemon_msg "Checking files in /boot" "$NAME:"
+        /usr/bin/chkboot &
+        log_end_msg 0
+    ;;
+
+    restart|stop)
+        ## Nothing to do
+    ;;
+
+    force-reload|reload)
+        ## Not supported
+        exit 3
+    ;;
+
+    *)
+        echo "Usage: /etc/init.d/$NAME {start}" >&2
+        exit 1
+    ;;
+
+esac
+
+exit 0

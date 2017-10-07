@@ -1,0 +1,58 @@
+.TH chkboot 1 "June 2014" "" "check boot"
+
+.SH NAME
+\fBchkboot\fP - Run integrity checks on files in /boot
+
+.SH SYNOPSIS
+.nf
+.fam C
+\fBchkboot\fP [\fB--update\fP | \fB--help\fP]
+.fam T
+.fi
+
+.SH DESCRIPTION
+\fBchkboot\fP is a set of scripts that are meant to be run on a system with an encrypted disk drive. Due to the nature of disk encryption, in order to get the operating system to boot, there needs to be a portion of it which remains un-encrypted. These scripts check that those files have not changed between reboots. Since the scripts and the data they generate are stored on the encrypted part of the disk, any attempts to modify the boot partition between reboots will be detected.
+
+\fBchkboot\fP: When run as root, this generates sha256sum hashes of each boot file and the MBR of the boot partition if it exists, then compares the values of these hashes against previously generated hashes if they exist, and any files that don't match get added to a list. A timestamped log of all files that have had changes made to them is kept, but the short term list meant to alert the user is erased the next time \fBchkboot\fP is run.
+
+\fBchkboot-check\fP: This file can be run by anyone who can view /var/lib/chkboot, and will display a warning a the list of changed files if any were detected last time chkboot was run.
+
+\fBchkboot.conf\fP: Contains settings for your configuration, including which alert types will be used. Alert types are currently on graphical login via '/etc/profile.d/' and in the vterm header by modifying '/etc/issue'
+
+\fBchkboot-autostart\fP: Creates an autostart entry calling \fBchkboot-check\fP on every startup. If a change has been detected a dialog will be shown by Zenity.
+
+.SH OPTIONS
+
+.TP
+\fB--update\fR, \fB-u\fR
+Update checksums for boot partition files and create/update the alert file with any differences.
+
+.TP
+\fB--help\fR, \fB-h\fR
+Display this help text.
+
+.SH FILES
+/etc/default/chkboot.conf
+
+.SH AUTHORS
+Ju (ju at heisec dot de)
+
+chkboot originally appeared in an article titled "Boot-Sicherung" in [c't magazin's March 2012 issue] [1]. The original author is Juergen Schmidt, ju at heisec.de. The original source code can be found either at the first commit of this repository, or at the [original URL] [2].
+.br
+[1]: http://www.heise.de/ct/inhalt/2012/03/146/
+.br
+[2]: http://ftp.heise.de/pub/ct/listings/1203-146.zip
+.br
+
+Additional authors:
+.br
+Inhies (https://github.com/inhies/)
+.br
+Prurigro (https://github.com/prurigro/)
+
+.SH LICENCE
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any later version.
+.br
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+.br
+You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.
