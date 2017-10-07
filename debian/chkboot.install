@@ -4,3 +4,4 @@ chkboot-desktopalert usr/bin/
 chkboot.conf etc/default/
 chkboot-profilealert.sh etc/profile.d/
 chkboot-bootcheck usr/lib/systemd/scripts/
+debian/chkboot.desktop /usr/share/chkboot/

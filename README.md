@@ -59,9 +59,15 @@ Install package:
 
     ~# dpkg -i ../chkboot*.deb
 
+Install zenity for graphical notifications about boot changes:
+
+     ~# apt-get install zenity
+
 Install missing dependencies:
 
     ~# apt-get -f install
+
+__IMPORTANT__: Create an autostart entry that calls chkboot-desktopalert script to be notified about changes after login. For XFCE just copy the `/usr/share/chkboot/chkboot.desktop` to `$HOME/.config/xfce/autostart/` directory. Every time this user logs in and boot changes are detected a message will be shown. *NOTE:* `zenity` or `xmessage` must be installed for this.
 
 Manual Installation
 -------------------

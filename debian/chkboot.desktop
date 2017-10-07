@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=chkboot
+Comment=Notifies about changes in /boot
+Exec=/usr/bin/chkboot-desktopalert
+StartupNotify=false
+Terminal=false
+Hidden=false
