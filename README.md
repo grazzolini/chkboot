@@ -1,5 +1,5 @@
-Introduction:
--------------
+Introduction
+------------
 
 chkboot is a set of scripts that are meant to be run on a system with an
 encrypted disk drive. Due to the nature of disk encryption, in order to get
@@ -11,7 +11,7 @@ reboots will be detected.
 
 
 Description
-------------
+-----------
 
 `chkboot`: When run as root, this generates sha256sum hashes of each boot file
 and the MBR of the boot partition if it exists, then compares the values of
@@ -34,28 +34,36 @@ your modules array to have chkboot run automatically when you upgrade linux.
 `SYSTEMD SUPPORT`: If your system uses systemd, you should enable the chkboot
 service to have your boot partitioned checked every time your system starts.
 
+Package building
+----------------
+
+**Note:** This should work properly on Debian 8 (Jessie) and Debian 9 (Stretch).
+
+First install the packages for building:
+
+    ~# apt-get install git devscripts
+
+Then clone this repository:
+
+    ~$ git clone https://github.com/philippmeisberger/chkboot.git
+
+Build the package:
+
+    ~$ cd ./chkboot/
+    ~$ dpkg-buildpackage -uc -us
+
 Installation
 ------------
 
-### The basic components can be installed as shown below
+Install package:
 
-```
-make install
-```
+    ~# dpkg -i ../chkboot*.deb
 
-### To install initcpio components:
+Install missing dependencies:
 
-```
-make install-initcpio
-```
+    ~# apt-get -f install
 
-### To install systemd components:
-
-```
-make install-systemd
-```
-
-Manual Installation 
+Manual Installation
 -------------------
 
 ### Everything should be installed as shown below
@@ -75,7 +83,7 @@ Ubuntu), add the following line to `/etc/rc.local`:
 /usr/bin/chkboot &
 ```
 
-### REQUIRES INITCPIO: 
+### REQUIRES INITCPIO:
 
 Add `chkboot` to the end of the 'HOOKS' array in `/etc/mkinitcpio.conf`
 
@@ -89,11 +97,11 @@ Run `systemctl --system daemon-reload` and then `systemctl enable chkboot`
 
 ### OPTIONAL:
 
-`chkboot-bootcheck` can be installed elsewhere and added to the startup sequence 
+`chkboot-bootcheck` can be installed elsewhere and added to the startup sequence
 with another system:
 
 ```
-install -D -m644 chkboot/chkboot.service /usr/lib/systemd/system/chkboot.service
+install -D -m644 chkboot/debian/chkboot.service /usr/lib/systemd/system/chkboot.service
 install -D -m755 chkboot/chkboot-bootcheck /usr/lib/systemd/scripts/chkboot-bootcheck
 ```
 
@@ -121,3 +129,4 @@ Prurigro (https://github.com/prurigro/)
 
 Contributors:
 sercxanto (https://github.com/sercxanto/)
+Philipp Meisberger (https://github.com/philippmeisberger/chkboot)

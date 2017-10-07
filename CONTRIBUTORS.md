@@ -7,3 +7,4 @@ Additional authors
     Inhies (https://github.com/inhies/)
     Prurigro (https://github.com/prurigro/)
     sercxanto (https://github.com/sercxanto/)
+    Philipp Meisberger (https://github.com/philippmeisberger/chkboot)
