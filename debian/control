@@ -3,7 +3,7 @@ Maintainer: Philipp Meisberger <team@pm-codeworks.de>
 Section: shells
 Priority: optional
 Standards-Version: 3.9.8
-Build-Depends: debhelper (>= 9)
+Build-Depends: debhelper (>= 9), dh-systemd
 Vcs-Git: https://github.com/philippmeisberger/chkboot.git
 
 Package: chkboot
