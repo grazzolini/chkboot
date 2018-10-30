@@ -89,12 +89,11 @@ Run `systemctl --system daemon-reload` and then `systemctl enable chkboot`
 
 ### OPTIONAL:
 
-`chkboot-bootcheck` can be installed elsewhere and added to the startup sequence 
-with another system:
+`chkboot-bootcheck` can be added to the startup sequence with another system:
 
 ```
 install -D -m644 chkboot/chkboot.service /usr/lib/systemd/system/chkboot.service
-install -D -m755 chkboot/chkboot-bootcheck /usr/lib/systemd/scripts/chkboot-bootcheck
+install -D -m755 chkboot/chkboot-bootcheck /usr/libexec/chkboot/chkboot-bootcheck
 ```
 
 ``chkboot-desktopalert`` notifies the desktop user about the change and can be
