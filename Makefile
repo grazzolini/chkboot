@@ -3,6 +3,8 @@ DEFAULT = $(DESTDIR)/etc/default
 PROFILED = $(DESTDIR)/etc/profile.d
 LIB = $(DESTDIR)/usr/lib
 
+all:
+
 install:
 	install -D -m644 chkboot.conf $(DEFAULT)/chkboot.conf
 	install -D -m755 chkboot $(BIN)/chkboot
@@ -19,4 +21,4 @@ install-systemd: install
 	systemctl --system daemon-reload
 	systemctl enable chkboot
 
-.PHONY: install install-initcpio install-systemd
+.PHONY: all install install-initcpio install-systemd
