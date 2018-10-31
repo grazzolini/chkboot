@@ -35,9 +35,11 @@ DISKHEAD_LAST="${CHKBOOT_DATA}/DISKHEAD-last"
 CHANGES_ALERT="${CHKBOOT_DATA}/${CHANGES_ALERT}"
 CHANGES_LOG="${CHKBOOT_DATA}/${CHANGES_LOG}"
 
+UPDATE="0"
+CHANGED="0"
 if [ ! -z "$1" ]; then
     if [ "$1" = "-u" -o "$1" = "--update" ]; then
-        CHANGED="-1"
+        UPDATE="1"
     elif [ "$1" = "-h" -o "$1" = "--help" ]; then
         help
         exit 0
@@ -45,14 +47,12 @@ if [ ! -z "$1" ]; then
         echo -e "Invalid argument: ${1}"
         help
         exit 1
-    fi    
-else
-    CHANGED="0"
+    fi
 fi
 
 install -d "$CHKBOOT_DATA"
 
-# delete the previous 
+# delete the previous
 if [[ -s "${CHANGES_ALERT}" ]]; then
     # restore /etc/issue if it's been modified
     if [ ! $(grep -c "CHKBOOT ALERT" /etc/issue) = 0 ]; then
@@ -82,13 +82,11 @@ pushd "$BOOTDIR" > /dev/null 2>&1
     if [ ! -s "$DISKHEAD_LAST" ]; then ln -s -f $DISKHEAD $DISKHEAD_LAST; fi
     if [ ! -s "$BOOTFILES_LAST" ]; then ln -s -f $BOOTFILES $BOOTFILES_LAST; exit 0; fi
 
-    if [ ! "$CHANGED" = "-1" ]; then
-        ( diff $BOOTFILES_LAST $BOOTFILES >> "${CHANGES_ALERT}-now" ) || CHANGED="1"
-        ( diff $DISKHEAD_LAST $DISKHEAD >> "${CHANGES_ALERT}-now" ) || CHANGED="1"
-    fi
+    ( diff $BOOTFILES_LAST $BOOTFILES >> "${CHANGES_ALERT}-now" ) || CHANGED="1"
+    ( diff $DISKHEAD_LAST $DISKHEAD >> "${CHANGES_ALERT}-now" ) || CHANGED="1"
 
     # changes detected, create the changes alert file
-    if [ ! $CHANGED = "1" ] ; then
+    if [ $CHANGED = "0" ] ; then
         rm -f $DISKHEAD "${CHANGES_ALERT}-now" $BOOTFILES
     else
         # create the changes alert file with a heading and the date and the list of changed files
@@ -102,6 +100,13 @@ pushd "$BOOTDIR" > /dev/null 2>&1
         # set the latest hashes to the old ones for next time then exit
         ln -s -f $BOOTFILES $BOOTFILES_LAST
         ln -s -f $DISKHEAD $DISKHEAD_LAST
-        exit 1
     fi
+
+    if [ $UPDATE = "1" ]; then
+        rm -f "$CHANGES_ALERT" "${CHANGES_ALERT}-now"
+        exit 0
+    fi
+
+    exit $CHANGED
+
 popd > /dev/null 2>&1
