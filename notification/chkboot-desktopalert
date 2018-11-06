@@ -5,7 +5,7 @@
 #
 # License: GPLv2 or later
 
-source /etc/default/chkboot.conf
+source /etc/default/chkboot
 
 chgfile=${CHKBOOT_DATA}/${CHANGES_ALERT}
 

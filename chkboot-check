@@ -7,7 +7,7 @@
 #
 # license: GPLv2
 
-source /etc/default/chkboot.conf
+source /etc/default/chkboot
 
 if [[ -s "${CHKBOOT_DATA}/${CHANGES_ALERT}" ]]; then
     echo -e -n "\e[0;${HIGHLIGHT_COLOUR};47m"
