@@ -1,0 +1,20 @@
+[Trigger]
+Type = File
+Operation = Install
+Operation = Upgrade
+Target = usr/lib/modules/*/vmlinuz
+Target = usr/lib/initcpio/*
+
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = systemd
+
+[Action]
+Depends = chkboot
+Depends = coreutils
+Description = Comparing chkboot hashes...
+When = PreTransaction
+Exec = /usr/bin/sh -c 'if [ -s /var/lib/chkboot/boot-differences ]; then /usr/bin/echo "      ###WARNING### Previously modified boot files not acknowledged"; /usr/bin/echo "      ###WARNING### See chkboot log for details"; fi; /usr/lib/systemd/scripts/chkboot-bootcheck && if [ -s /var/lib/chkboot/boot-differences ]; then /usr/bin/echo "      ###WARNING### Modified boot files detected since last boot"; /usr/bin/echo "      ###WARNING### See chkboot log for details"; fi'
