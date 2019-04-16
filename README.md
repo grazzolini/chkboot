@@ -13,7 +13,7 @@ reboots will be detected.
 Description
 ------------
 
-`chkboot`: When run as root, this generates sha256sum hashes of each boot file
+`chkboot`: When run as root, this generates sha512sum hashes of each boot file
 and the MBR of the boot partition if it exists, then compares the values of
 these hashes against previously generated hashes if they exist, and any files
 that don't match get added to a list. A timestamped log of all files that have

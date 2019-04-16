@@ -72,7 +72,7 @@ pushd "$BOOTDIR" > /dev/null 2>&1
 
     # generate hashes of each file
     for fname in $files; do
-        hash=`sha256sum -b $fname | awk '{print $1}'`
+        hash=`sha512sum -b $fname | awk '{print $1}'`
         echo "$fname $hash"
     done > $BOOTFILES
 
