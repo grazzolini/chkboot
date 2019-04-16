@@ -13,7 +13,7 @@ if [[ -s "${CHKBOOT_DATA}/${CHANGES_ALERT}" ]]; then
     echo -e -n "\e[0;${HIGHLIGHT_COLOUR};47m"
     echo -e "CHKBOOT ALERT!\n"
     echo "Changes have been detected in your boot files!"
-    echo "The following list of files contained in have changed since the last time this script was run (filename inode sha256 BLOCKS):"
+    echo "The following list of files contained in have changed since the last time this script was run (filename sha512):"
     cat "${CHKBOOT_DATA}/${CHANGES_ALERT}"
     echo -e -n "\nThis notification will continue to appear until you either run \"chkboot\" again as root or restart your computer"
     echo -e "\e[0m\n"

@@ -67,15 +67,13 @@ fi
 dd if="$BOOTDISK" of="$DISKHEAD" bs=512 count=1 > /dev/null 2>&1
 
 pushd "$BOOTDIR" > /dev/null 2>&1
-    files=`find . -xdev -type f` # get file infos
+    files=`find . -type f` # get file infos
     files=`echo $files | sed "s/.\/grub\/grubenv//"` # remove files that should be skipped
 
     # generate hashes of each file
     for fname in $files; do
-        hash=`sha256sum -b $fname | awk '{print $1}'`
-        inode=`stat --printf="%i\n" $fname`
-        blcks=`debugfs -R "stat $fname"  $BOOTPART 2>/dev/null | grep -A 1 -e 'BLOCKS:' -e 'EXTENTS' | tail -1`
-        echo "$fname $inode $hash $blcks"
+        hash=`sha512sum -b $fname | awk '{print $1}'`
+        echo "$fname $hash"
     done > $BOOTFILES
 
     [ -s "$BOOTFILES" ] || ( exit 0 )
