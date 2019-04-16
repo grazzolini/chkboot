@@ -1,0 +1,13 @@
+[Trigger]
+Type = File
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = boot/*
+
+[Action]
+Depends = chkboot
+Depends = coreutils
+Description = Updating chkboot hashes...
+When = PostTransaction
+Exec = /usr/bin/sh -c '/usr/bin/chkboot --update'
