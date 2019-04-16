@@ -2,15 +2,8 @@
 Type = File
 Operation = Install
 Operation = Upgrade
-Target = usr/lib/modules/*/vmlinuz
-Target = usr/lib/initcpio/*
-
-[Trigger]
-Type = Package
-Operation = Install
-Operation = Upgrade
 Operation = Remove
-Target = systemd
+Target = boot/*
 
 [Action]
 Depends = chkboot
