@@ -5,7 +5,7 @@
 #
 # license: GPLv2
 
-# only try to display chkboot changes if the 'proofile' alert style has been selected
+# only try to display chkboot changes if the 'profile' alert style has been selected
 if grep "^CHKBOOT_STYLES=.*profile" /etc/default/chkboot.conf >/dev/null ; then
     # run whatever issues exist then return the response
     chkboot-check
