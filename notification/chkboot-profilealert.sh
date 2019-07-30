@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
-
-# chkboot-profilealert.sh: copy to /etc/profile.d/chkboot-profilealert.sh and change its permissions to executable
+# chkboot-profilealert.sh: copy to /etc/profile.d/chkboot-profilealert.sh
 #
 # author: ju (ju at heisec dot de)
 # contributors: inhies, prurigro
