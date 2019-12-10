@@ -55,6 +55,12 @@ make install-initcpio
 make install-systemd
 ```
 
+### To install apt components:
+
+```
+make install-apt
+```
+
 Manual Installation 
 -------------------
 
