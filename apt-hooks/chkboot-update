@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Post apt hook that clear valid modification with chkboot -u
+# Author: Baptiste BEAUPLAT <lynode@cilg.org>
+# license: GPLv2
+
+TRIGGER="/var/lib/chkboot/needs-update"
+
+# Only run if needed
+[[ -f "${TRIGGER}" ]] || exit 0
+rm -f "${TRIGGER}"
+
+echo "Updating chkboot hashes of your boot files..."
+
+# TEST TO SEE IF BOOT FILES WERE MODIFIED WITHOUT THE USER'S ACKNOWLEDGEMENT (BY
+# RUNNING 'chkboot') AND ALERT THEM IF IT HAS BEEN
+chkboot-check
+if [ "$?" = 1 ]; then
+    echo -e "\n### WARNING: Previously modified files were not acknowledged ###"
+    echo "### Check the issues log at ${CHANGES_LOG} for details ###"
+fi
+
+# RUN CHKBOOT TO UPDATE THE HASHES WITHOUT CREATING THE ALERT FILE
+chkboot -u
+sync
