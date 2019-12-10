@@ -55,6 +55,27 @@ make install-initcpio
 make install-systemd
 ```
 
+### To install man pages:
+
+Note: manpages are generated from ReStructuredText. They need rst2man from
+python-docutils:
+
+On Arch-linux:
+```
+pacman -S python-docutils
+```
+
+On Debian-like:
+```
+apt install python3-docutils
+```
+
+Install the manpages:
+
+```
+make install-man
+```
+
 Manual Installation 
 -------------------
 
