@@ -3,8 +3,21 @@ DEFAULT = $(DESTDIR)/etc/default
 PROFILED = $(DESTDIR)/etc/profile.d
 LIB = $(DESTDIR)/usr/lib
 SHARE = $(DESTDIR)/usr/share
+MAN = $(SHARE)/man
 
-all:
+MANPAGES = man/chkboot.8 \
+	   man/chkboot-check.8 \
+	   man/chkboot-desktopalert.8
+
+all: man
+
+man: $(MANPAGES)
+
+$(MANPAGES): %.8: %.8.rst
+	rst2man $< > $@
+
+clean:
+	rm -vf man/*.8
 
 install:
 	install -D -m644 chkboot.conf $(DEFAULT)/chkboot.conf
@@ -24,4 +37,7 @@ install-systemd: install
 	install -D -m644 chkboot.service $(LIB)/systemd/system/chkboot.service
 	install -D -m755 chkboot-bootcheck $(LIB)/systemd/scripts/chkboot-bootcheck
 
-.PHONY: all install install-initcpio install-pacman install-systemd
+install-man: man
+	$(foreach manpage,$(MANPAGES),install -D -m644 $(manpage) $(MAN)/man8/$(notdir $(manpage));)
+
+.PHONY: all install install-initcpio install-pacman install-systemd man install-man clean
