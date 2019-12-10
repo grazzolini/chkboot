@@ -1,4 +1,5 @@
 BIN = $(DESTDIR)/usr/bin
+ETC = $(DESTDIR)/etc
 DEFAULT = $(DESTDIR)/etc/default
 PROFILED = $(DESTDIR)/etc/profile.d
 LIB = $(DESTDIR)/usr/lib
@@ -20,8 +21,12 @@ install-pacman: install
 	install -D -m644 pacman-hooks/80-chkboot-check.hook $(SHARE)/libalpm/hooks/80-chkboot-check.hook
 	install -D -m644 pacman-hooks/99-chkboot-update.hook $(SHARE)/libalpm/hooks/99-chkboot-update.hook
 
+install-apt: install
+	install -D -m644 apt-hooks/05chkboot $(ETC)/apt/apt.conf.d/05chkboot
+	install -D -m755 apt-hooks/chkboot-update $(LIB)/chkboot/chkboot-update
+
 install-systemd: install
 	install -D -m644 chkboot.service $(LIB)/systemd/system/chkboot.service
 	install -D -m755 chkboot-bootcheck $(LIB)/systemd/scripts/chkboot-bootcheck
 
-.PHONY: all install install-initcpio install-pacman install-systemd
+.PHONY: all install install-initcpio install-pacman install-systemd install-apt
