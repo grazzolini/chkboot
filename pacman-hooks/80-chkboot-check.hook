@@ -1,9 +1,12 @@
 [Trigger]
-Type = File
+Type = Package
 Operation = Install
 Operation = Upgrade
 Operation = Remove
-Target = boot/*
+Target = linux*
+Target = mkinitcpio*
+Target = grub*
+Target = systemd
 
 [Action]
 Depends = chkboot
