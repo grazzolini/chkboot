@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# chkboot-bootcheck: on systemd systems, copy this to /usr/lib/systemd/scripts/ and start the chkboot-boot.service
-#                    on other systems, copy this somewhere it can be acceed during boot and add it to the end of the boot process
+# chkboot-bootcheck: copy this to /usr/libexec/chkboot/ and start the chkboot-boot.service
+#                    on other systems, copy this and add it to the end of the boot process
 #
 # author: ju (ju at heisec dot de)
 # contributors: inhies, prurigro
 #
 # license: GPLv2
 
-source /etc/default/chkboot.conf
+source /etc/default/chkboot
 
 chkboot
 
