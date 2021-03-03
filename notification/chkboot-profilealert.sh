@@ -5,7 +5,7 @@
 # author: ju (ju at heisec dot de)
 # contributors: inhies, prurigro
 #
-# license: GPLv2
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 source /etc/default/chkboot.conf
 
