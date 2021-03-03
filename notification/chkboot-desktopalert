@@ -3,7 +3,7 @@
 # small script to check if files under /boot changed
 # Author: https://github.com/sercxanto
 #
-# License: GPLv2 or later
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 source /etc/default/chkboot.conf
 
